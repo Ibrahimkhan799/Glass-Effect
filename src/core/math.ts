@@ -1,5 +1,9 @@
+export function finiteNumber(value: number, fallback = 0): number {
+  return Number.isFinite(value) ? value : fallback;
+}
+
 export function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
+  return Math.min(max, Math.max(min, finiteNumber(value, min)));
 }
 
 export function lerp(a: number, b: number, t: number): number {

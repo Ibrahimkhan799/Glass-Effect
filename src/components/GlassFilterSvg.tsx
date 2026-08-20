@@ -57,7 +57,7 @@ export function GlassFilterSvg({
               <feDisplacementMap
                 in="SourceGraphic"
                 in2="map"
-                scale={scales.red}
+                scale={finiteScale(scales.red)}
                 xChannelSelector="R"
                 yChannelSelector="G"
                 result="dispR"
@@ -71,7 +71,7 @@ export function GlassFilterSvg({
               <feDisplacementMap
                 in="SourceGraphic"
                 in2="map"
-                scale={scales.green}
+                scale={finiteScale(scales.green)}
                 xChannelSelector="R"
                 yChannelSelector="G"
                 result="dispG"
@@ -85,7 +85,7 @@ export function GlassFilterSvg({
               <feDisplacementMap
                 in="SourceGraphic"
                 in2="map"
-                scale={scales.blue}
+                scale={finiteScale(scales.blue)}
                 xChannelSelector="R"
                 yChannelSelector="G"
                 result="dispB"
@@ -103,7 +103,7 @@ export function GlassFilterSvg({
             <feDisplacementMap
               in="SourceGraphic"
               in2="map"
-              scale={scales.green}
+              scale={finiteScale(scales.green)}
               xChannelSelector="R"
               yChannelSelector="G"
               result="refracted"
@@ -121,6 +121,10 @@ export function GlassFilterSvg({
       </defs>
     </svg>
   );
+}
+
+function finiteScale(value: number): number {
+  return Number.isFinite(value) ? value : 0;
 }
 
 const svgStyle: CSSProperties = {

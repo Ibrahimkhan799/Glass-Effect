@@ -13,6 +13,7 @@ export {
   clamp,
   depthToBevel,
   dispersionToSpread,
+  finiteNumber,
   frostToBlur,
   lerp,
   refractionToScale,

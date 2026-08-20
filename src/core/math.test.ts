@@ -63,6 +63,13 @@ describe("control mapping", () => {
     expect(resolveRadius(12, 100, 40)).toBe(12);
   });
 
+  it("keeps finite displacement scales when inputs are not numbers", () => {
+    const scales = chromaticScales(Number.NaN, Number.NaN);
+    expect(Number.isFinite(scales.red)).toBe(true);
+    expect(Number.isFinite(scales.green)).toBe(true);
+    expect(Number.isFinite(scales.blue)).toBe(true);
+  });
+
   it("clamps to the requested range", () => {
     expect(clamp(12, 0, 10)).toBe(10);
     expect(clamp(-4, 0, 10)).toBe(0);

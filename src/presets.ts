@@ -51,8 +51,13 @@ export function resolveOptics(
   material: GlassMaterial | undefined,
   overrides: Partial<GlassOptics>,
 ): GlassOptics {
-  return {
-    ...GLASS_PRESETS[material ?? "regular"],
-    ...overrides,
-  };
+  const preset = GLASS_PRESETS[material ?? "regular"];
+  const next = { ...preset };
+  (Object.keys(overrides) as (keyof GlassOptics)[]).forEach((key) => {
+    const value = overrides[key];
+    if (value !== undefined) {
+      (next[key] as typeof value) = value;
+    }
+  });
+  return next;
 }
