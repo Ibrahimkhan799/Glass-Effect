@@ -34,6 +34,11 @@ export {
 export { supportsSvgBackdropFilter } from "./core/support";
 export { GLASS_PRESETS, resolveOptics } from "./presets";
 export { useGlassFilter } from "./hooks/useGlassFilter";
+export {
+  useGlass,
+  type GlassBind,
+  type UseGlassOptions,
+} from "./hooks/useGlass";
 
 export { Glass, type GlassProps } from "./components/Glass";
 export { GlassButton, type GlassButtonProps } from "./components/GlassButton";

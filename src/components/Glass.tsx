@@ -1,18 +1,26 @@
 import {
+  Children,
+  cloneElement,
+  isValidElement,
   type ButtonHTMLAttributes,
-  type CSSProperties,
   type ElementType,
+  type ReactElement,
   type ReactNode,
 } from "react";
-import { useGlassFilter } from "../hooks/useGlassFilter";
-import { resolveOptics } from "../presets";
+import { useGlass, type UseGlassOptions } from "../hooks/useGlass";
 import type { GlassMaterial, GlassOptics, GlassRadius } from "../types";
-import { GlassFilterSvg } from "./GlassFilterSvg";
+import { cx, getElementRef, mergeRefs, mergeStyles } from "../utils/compose";
 
 export interface GlassProps
   extends Omit<ButtonHTMLAttributes<HTMLElement>, "color">,
     Partial<GlassOptics> {
   as?: ElementType;
+  /**
+   * Merge the glass material onto your existing element instead of wrapping.
+   * The child must be a single element that can take a ref (a DOM node or a
+   * `forwardRef` component).
+   */
+  asChild?: boolean;
   children?: ReactNode;
   radius?: GlassRadius;
   material?: GlassMaterial;
@@ -21,12 +29,13 @@ export interface GlassProps
 
 export function Glass({
   as: Component = "div",
+  asChild = false,
   children,
   className,
   style,
-  radius = 28,
-  material = "regular",
-  interactive = false,
+  radius,
+  material,
+  interactive,
   refraction,
   depth,
   dispersion,
@@ -38,7 +47,12 @@ export function Glass({
   lightIntensity,
   ...rest
 }: GlassProps) {
-  const optics = resolveOptics(material, {
+  const glass = useGlass({
+    radius,
+    material,
+    interactive,
+    className,
+    style,
     refraction,
     depth,
     dispersion,
@@ -48,60 +62,44 @@ export function Glass({
     tint,
     lightAngle,
     lightIntensity,
-  });
+    inheritRadius: asChild,
+  } satisfies UseGlassOptions);
 
-  const filter = useGlassFilter({
-    radius,
-    refraction: optics.refraction,
-    depth: optics.depth,
-    dispersion: optics.dispersion,
-    frost: optics.frost,
-    magnify: optics.magnify,
-  });
+  if (asChild) {
+    const child = Children.only(children);
+    if (!isValidElement(child)) {
+      throw new Error("Glass asChild expects a single React element.");
+    }
 
-  const radiusCss = radius === "pill" || radius === "circle" ? 9999 : radius;
+    const childEl = child as ReactElement<{
+      className?: string;
+      style?: GlassProps["style"];
+      children?: ReactNode;
+    }>;
 
-  const fallbackBlur = Math.max(filter.frostBlur, filter.canRefract ? 2 : 14);
-  const backdrop = filter.canRefract && filter.mapUrl
-    ? `blur(${fallbackBlur}px) saturate(${optics.saturation}) brightness(1.06) url(#${filter.filterId})`
-    : `blur(${fallbackBlur}px) saturate(${optics.saturation}) brightness(1.08)`;
-
-  const cssVars = {
-    "--ag-radius": `${radiusCss}px`,
-    "--ag-tint": optics.tint,
-    "--ag-light-angle": `${optics.lightAngle}deg`,
-    "--ag-light": String(optics.lightIntensity),
-    "--ag-backdrop": backdrop,
-  } as CSSProperties;
-
-  const classes = [
-    "ag-glass-wrap",
-    interactive ? "ag-glass-wrap--interactive" : "",
-    className ?? "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+    return cloneElement(childEl, {
+      ...rest,
+      className: cx(glass.props.className, childEl.props.className),
+      style: mergeStyles(glass.props.style, childEl.props.style),
+      ref: mergeRefs(glass.props.ref, getElementRef(childEl)),
+      children: (
+        <>
+          {glass.filter}
+          {childEl.props.children}
+        </>
+      ),
+    } as never);
+  }
 
   return (
     <Component
-      className={classes}
-      style={{ ...cssVars, ...style }}
+      className={glass.props.className}
+      style={glass.props.style}
       {...rest}
+      ref={glass.props.ref}
     >
-      <div className="ag-glass" ref={filter.setNode}>
-        <GlassFilterSvg
-          id={filter.filterId}
-          mapUrl={filter.mapUrl}
-          width={filter.elementWidth}
-          height={filter.elementHeight}
-          scales={filter.scales}
-          frostBlur={filter.frostBlur}
-        />
-        <span className="ag-glass__specular" aria-hidden="true" />
-        <span className="ag-glass__sheen" aria-hidden="true" />
-        <span className="ag-glass__noise" aria-hidden="true" />
-        <span className="ag-glass__content">{children}</span>
-      </div>
+      {glass.filter}
+      {children}
     </Component>
   );
 }

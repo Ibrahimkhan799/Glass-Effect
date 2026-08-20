@@ -13,6 +13,7 @@ import {
   GlassSegmented,
   GlassSlider,
   GlassSwitch,
+  useGlass,
 } from "glass-effect";
 import {
   BellIcon,
@@ -53,6 +54,7 @@ export default function App() {
       <Hero />
       <OpticsLab />
       <LensTypography />
+      <BringYourOwn />
       <Kit />
       <footer className="foot">
         Apple-inspired Liquid Glass · real SVG refraction · MIT
@@ -68,8 +70,8 @@ function Nav() {
         <strong>glass-effect</strong>
         <span>React · Liquid Glass</span>
       </Glass>
-      <a className="nav-link" href="#kit">
-        Components
+      <a className="nav-link" href="#byo">
+        Use it
       </a>
     </header>
   );
@@ -333,6 +335,64 @@ function LensTypography() {
   );
 }
 
+function BringYourOwn() {
+  const weather = useGlass({ material: "regular", radius: 28 });
+
+  return (
+    <section className="byo" id="byo">
+      <div className="lab-copy">
+        <p className="eyebrow">Bring your own UI</p>
+        <h2>Drop glass onto layouts you already have</h2>
+        <p>
+          Keep your markup, CSS, and components. Wrap them, merge onto an
+          existing node with `asChild`, or spread `useGlass()` onto any element.
+        </p>
+      </div>
+      <div className="byo-grid">
+        <Glass asChild>
+          <aside className="your-sidebar">
+            <h3>Your sidebar</h3>
+            <nav>
+              <a href="#byo">Library</a>
+              <a href="#byo">Projects</a>
+              <a href="#kit">Settings</a>
+            </nav>
+            <GlassButton size="sm" variant="primary">
+              New file
+            </GlassButton>
+          </aside>
+        </Glass>
+
+        <div {...weather.props} className={`${weather.props.className} your-weather`}>
+          {weather.filter}
+          <span>San Francisco</span>
+          <strong>68°</strong>
+          <span>Clear · your widget, our material</span>
+        </div>
+      </div>
+      <pre className="usage" style={{ marginTop: 18 }}>{`import { Glass, useGlass } from "glass-effect";
+import "glass-effect/styles.css";
+
+// Wrap anything
+<Glass radius={24}>
+  <YourCard />
+</Glass>
+
+// Or paint the node you already render
+<Glass asChild>
+  <aside className="sidebar">...</aside>
+</Glass>
+
+// Or attach it with a hook
+const glass = useGlass({ radius: 28 });
+<section {...glass.props}>
+  {glass.filter}
+  <YourLayout />
+</section>`}</pre>
+    </section>
+  );
+}
+
 function Kit() {
   const [enabled, setEnabled] = useState(true);
   const [volume, setVolume] = useState(62);
@@ -424,11 +484,11 @@ function Kit() {
         />
       </div>
 
-      <pre className="usage">{`import { Glass, GlassButton } from "glass-effect";
+      <pre className="usage">{`import { Glass } from "glass-effect";
 import "glass-effect/styles.css";
 
-<Glass radius={28} material="regular">
-  <GlassButton variant="primary">Continue</GlassButton>
+<Glass asChild>
+  <button className="save">Save</button>
 </Glass>`}</pre>
     </section>
   );

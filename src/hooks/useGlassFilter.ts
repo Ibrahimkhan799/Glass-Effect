@@ -13,7 +13,7 @@ import { supportsSvgBackdropFilter } from "../core/support";
 import type { FilterScales, GlassRadius } from "../types";
 
 export interface UseGlassFilterOptions {
-  radius: GlassRadius;
+  radius?: GlassRadius;
   refraction: number;
   depth: number;
   dispersion: number;
@@ -31,6 +31,8 @@ export interface GlassFilterState {
   scales: FilterScales;
   frostBlur: number;
   canRefract: boolean;
+  radius: GlassRadius;
+  measuredRadius: number | null;
   setNode: (node: HTMLElement | null) => void;
 }
 
@@ -42,6 +44,8 @@ export function useGlassFilter(options: UseGlassFilterOptions): GlassFilterState
   const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
   const [generation, setGeneration] = useState(0);
 
+  const [autoRadius, setAutoRadius] = useState<number | null>(null);
+  const radius = options.radius ?? autoRadius ?? 28;
   const canRefract = typeof window !== "undefined" && supportsSvgBackdropFilter();
   const scales = chromaticScales(options.refraction, options.dispersion);
   const frostBlur = frostToBlur(options.frost);
@@ -53,7 +57,7 @@ export function useGlassFilter(options: UseGlassFilterOptions): GlassFilterState
       const buffer = getDisplacementBuffer({
         width,
         height,
-        radius: resolveRadius(options.radius, width, height),
+        radius: resolveRadius(radius, width, height),
         depth: depthToBevel(options.depth, Math.min(width, height)),
         magnify,
       });
@@ -61,7 +65,7 @@ export function useGlassFilter(options: UseGlassFilterOptions): GlassFilterState
       setMapSize({ width: buffer.width, height: buffer.height });
       setGeneration((g) => g + 1);
     },
-    [canRefract, magnify, options.depth, options.radius],
+    [canRefract, magnify, options.depth, radius],
   );
 
   useLayoutEffect(() => {
@@ -81,8 +85,14 @@ export function useGlassFilter(options: UseGlassFilterOptions): GlassFilterState
     observer.observe(node);
     const rect = node.getBoundingClientRect();
     setSize({ width: rect.width, height: rect.height });
+    if (options.radius === undefined) {
+      const computed = parseFloat(getComputedStyle(node).borderTopLeftRadius);
+      if (Number.isFinite(computed) && computed > 0) {
+        setAutoRadius(computed);
+      }
+    }
     return () => observer.disconnect();
-  }, [node]);
+  }, [node, options.radius]);
 
   useLayoutEffect(() => {
     rebuild(size.width, size.height);
@@ -98,6 +108,8 @@ export function useGlassFilter(options: UseGlassFilterOptions): GlassFilterState
     scales,
     frostBlur,
     canRefract,
+    radius,
+    measuredRadius: autoRadius,
     setNode,
   };
 }
