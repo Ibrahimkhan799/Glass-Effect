@@ -34,10 +34,12 @@ export function GlassFilterSvg({
       <defs>
         <filter
           id={id}
-          x="-12%"
-          y="-12%"
-          width="124%"
-          height="124%"
+          x="0"
+          y="0"
+          width={width}
+          height={height}
+          filterUnits="userSpaceOnUse"
+          primitiveUnits="userSpaceOnUse"
           colorInterpolationFilters="sRGB"
         >
           <feImage
@@ -45,8 +47,8 @@ export function GlassFilterSvg({
             result="map"
             x="0"
             y="0"
-            width="100%"
-            height="100%"
+            width={width}
+            height={height}
             preserveAspectRatio="none"
           />
 

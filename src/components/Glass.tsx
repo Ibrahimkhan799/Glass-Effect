@@ -92,8 +92,8 @@ export function Glass({
         <GlassFilterSvg
           id={filter.filterId}
           mapUrl={filter.mapUrl}
-          width={filter.mapWidth}
-          height={filter.mapHeight}
+          width={filter.elementWidth}
+          height={filter.elementHeight}
           scales={filter.scales}
           frostBlur={filter.frostBlur}
         />

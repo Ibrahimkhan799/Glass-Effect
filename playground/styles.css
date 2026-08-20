@@ -139,14 +139,14 @@ h2 {
 
 .control-center {
   display: grid;
-  grid-template-columns: 72px 72px;
-  gap: 14px;
+  grid-template-columns: 82px 82px;
+  gap: 16px;
   justify-content: center;
 }
 
 .focus-pill {
   grid-column: 1 / -1;
-  width: 158px;
+  width: 180px;
   color: #fff;
 }
 

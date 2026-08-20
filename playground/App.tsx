@@ -96,16 +96,16 @@ function Hero() {
 function ControlCenter() {
   return (
     <div className="control-center">
-      <GlassIconButton material="tinted" aria-label="Lock">
+      <GlassIconButton size={82} material="tinted" aria-label="Lock">
         <LockIcon />
       </GlassIconButton>
-      <GlassIconButton aria-label="Windows">
+      <GlassIconButton size={82} aria-label="Windows">
         <WindowsIcon />
       </GlassIconButton>
-      <GlassIconButton aria-label="Focus mode">
+      <GlassIconButton size={82} aria-label="Focus mode">
         <MoonIcon />
       </GlassIconButton>
-      <GlassIconButton material="tinted" aria-label="Notifications">
+      <GlassIconButton size={82} material="tinted" aria-label="Notifications">
         <BellIcon />
       </GlassIconButton>
       <Glass
@@ -119,7 +119,7 @@ function ControlCenter() {
         Focus
         <ChevronIcon />
       </Glass>
-      <GlassIconButton aria-label="Apps">
+      <GlassIconButton size={82} aria-label="Apps">
         <GridIcon />
       </GlassIconButton>
     </div>
