@@ -2,6 +2,9 @@
 
 Apple-inspired **Liquid Glass** for React. Add it to layouts and components you already have — you do not have to rebuild your UI with our kit.
 
+[![npm](https://img.shields.io/npm/v/glass-effect.svg)](https://www.npmjs.com/package/glass-effect)
+[![license](https://img.shields.io/npm/l/glass-effect.svg)](LICENSE)
+
 The material refracts the live backdrop. It is not a `blur()` tint sitting on top of the page.
 
 ## Install
@@ -14,6 +17,8 @@ npm install glass-effect
 import { Glass } from "glass-effect";
 import "glass-effect/styles.css";
 ```
+
+Works with Vite, Next.js (App Router: this package is a client module), Remix, and CRA. `react` and `react-dom` >= 18 are peer dependencies.
 
 ## Add glass to your own UI
 
@@ -130,3 +135,14 @@ npm run typecheck
 ## License
 
 MIT
+
+## Publishing
+
+The package name on npm is [`glass-effect`](https://www.npmjs.com/package/glass-effect).
+
+```bash
+npm login
+npm publish --access public
+```
+
+Or create a GitHub Release. The Publish workflow ships to npm with provenance when `NPM_TOKEN` is set in the repository secrets (npm automation token, publish permission).

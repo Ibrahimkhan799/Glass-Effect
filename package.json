@@ -1,13 +1,16 @@
 {
   "name": "glass-effect",
   "version": "1.0.0",
-  "description": "Apple-inspired Liquid Glass for React — real optical refraction, chromatic aberration, and frosted materials.",
+  "description": "Apple-inspired Liquid Glass for React — add real refraction to your own components and layouts.",
   "type": "module",
   "license": "MIT",
-  "author": "Glass Effect",
+  "author": "Ibrahimkhan799",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ibrahimkhan799/Glass-Effect.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ibrahimkhan799/Glass-Effect/issues"
   },
   "homepage": "https://github.com/Ibrahimkhan799/Glass-Effect#readme",
   "keywords": [
@@ -18,24 +21,37 @@
     "apple",
     "refraction",
     "backdrop-filter",
-    "ui"
+    "ui",
+    "components"
   ],
   "sideEffects": [
     "**/*.css"
   ],
   "files": [
-    "dist"
+    "dist/index.js",
+    "dist/index.cjs",
+    "dist/index.d.ts",
+    "dist/styles.css"
   ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "style": "./dist/styles.css",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "scripts": {
     "dev": "vite",
@@ -43,7 +59,9 @@
     "build:demo": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepack": "npm test && npm run typecheck && npm run build",
+    "pack:check": "npm pack --dry-run"
   },
   "peerDependencies": {
     "react": ">=18",
