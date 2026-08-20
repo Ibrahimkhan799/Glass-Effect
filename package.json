@@ -1,6 +1,6 @@
 {
   "name": "glass-effect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Apple-inspired Liquid Glass for React — add real refraction to your own components and layouts.",
   "type": "module",
   "license": "MIT",
@@ -55,7 +55,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build --config vite.lib.config.ts && cp src/styles.css dist/styles.css",
+    "build": "vite build --config vite.lib.config.ts && node -e \"fs.copyFileSync('src/styles.css', 'dist/styles.css')\"",
     "build:site": "vite build",
     "build:demo": "vite build",
     "preview": "vite preview",
