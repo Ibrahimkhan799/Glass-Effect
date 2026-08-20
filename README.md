@@ -115,13 +115,45 @@ The kit is convenience, not a requirement. Every piece is the same `Glass` primi
 
 Your children are never displaced — only the backdrop is — so text stays selectable and buttons stay clickable.
 
+## Documentation site
+
+This repo ships a landing page, API docs, and a live playground (Vite app in `playground/`).
+
+| Route | Page |
+| --- | --- |
+| `/` | Landing |
+| `/docs` | Documentation |
+| `/playground` | Interactive optics lab and kit |
+
+```bash
+npm run dev          # http://localhost:5173
+npm run build:site   # writes dist-site/
+npm run preview      # preview the production site
+```
+
+### Deploy on Vercel
+
+`vercel.json` is already configured (Vite, `npm run build:site`, output `dist-site`, SPA rewrites for `/docs` and `/playground`).
+
+1. Import this GitHub repo at [vercel.com/new](https://vercel.com/new).
+2. Keep the detected settings (they come from `vercel.json`).
+3. Deploy. The production URL will look like `https://glass-effect.vercel.app`.
+
+From the CLI, after `npx vercel login`:
+
+```bash
+npx vercel --yes
+npx vercel --prod
+```
+
 ## Scripts
 
 ```bash
 npm install
-npm run dev        # playground
+npm run dev          # landing + docs + playground
 npm test
-npm run build
+npm run build        # library (npm package)
+npm run build:site   # documentation site
 npm run typecheck
 ```
 
