@@ -37,4 +37,13 @@ describe("generateDisplacementBuffer", () => {
       expect(Math.abs(buffer.data[i] - 128)).toBeGreaterThan(8);
     }
   });
+
+  it("keeps left and right rim offsets opposite, not a one-sided slab", () => {
+    const y = 20;
+    const left = buffer.data[(y * 64 + 0) * 4];
+    const right = buffer.data[(y * 64 + 63) * 4];
+    expect(left).toBeLessThan(128);
+    expect(right).toBeGreaterThan(128);
+    expect(Math.abs(128 - left - (right - 128))).toBeLessThan(12);
+  });
 });

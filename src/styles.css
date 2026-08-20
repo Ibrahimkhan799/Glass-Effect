@@ -43,7 +43,7 @@
       rgba(255, 255, 255, calc(0.28 * var(--ag-light))) 0%,
       transparent 42%
     );
-  mix-blend-mode: plus-lighter;
+  mix-blend-mode: screen;
 }
 
 .ag-glass::after {
@@ -188,7 +188,7 @@ a.ag-glass {
 .ag-slider__fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #5b8cff, #7d5cff 55%, #ff5ea8);
+  background: rgba(255, 255, 255, 0.88);
 }
 
 .ag-slider__thumb {
@@ -196,7 +196,9 @@ a.ag-glass {
   top: 50%;
   width: 28px;
   height: 28px;
+  margin: 0;
   transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 .ag-segmented {

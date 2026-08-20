@@ -13,6 +13,7 @@ export {
   bevelMagnitude,
   chromaticScales,
   clamp,
+  filterRegionPad,
   depthToBevel,
   dispersionToSpread,
   finiteNumber,
