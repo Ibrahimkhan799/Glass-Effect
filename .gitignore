@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-playground
+.DS_Store
+*.log
+.vite
+coverage
+.idea
+.vscode
+*.tsbuildinfo
