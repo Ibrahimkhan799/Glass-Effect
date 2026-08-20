@@ -98,3 +98,11 @@ export function chromaticScales(
     blue: scale + spread,
   };
 }
+
+/**
+ * Extra objectBoundingBox padding so feDisplacementMap can sample past the
+ * element's edge instead of clipping a hard slab on the right/bottom.
+ */
+export function filterRegionPad(scale: number, size: number): number {
+  return Math.min(0.5, Math.max(0.12, Math.abs(scale) / Math.max(size, 1)));
+}

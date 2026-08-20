@@ -3,6 +3,7 @@ import {
   bevelMagnitude,
   chromaticScales,
   clamp,
+  filterRegionPad,
   depthToBevel,
   frostToBlur,
   refractionToScale,
@@ -73,5 +74,13 @@ describe("control mapping", () => {
   it("clamps to the requested range", () => {
     expect(clamp(12, 0, 10)).toBe(10);
     expect(clamp(-4, 0, 10)).toBe(0);
+  });
+});
+
+describe("filterRegionPad", () => {
+  it("grows with displacement scale so the right edge is not clipped", () => {
+    expect(filterRegionPad(80, 200)).toBeGreaterThan(0.12);
+    expect(filterRegionPad(80, 200)).toBeLessThanOrEqual(0.5);
+    expect(filterRegionPad(80, 200)).toBeGreaterThan(filterRegionPad(10, 200));
   });
 });

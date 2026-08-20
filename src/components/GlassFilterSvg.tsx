@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { filterRegionPad } from "../core/math";
 import type { FilterScales } from "../types";
 
 interface GlassFilterSvgProps {
@@ -22,23 +23,32 @@ export function GlassFilterSvg({
 
   const blur = Math.max(0, frostBlur * 0.18);
   const chromatic = Math.abs(scales.red - scales.blue) > 0.4;
+  const maxScale = Math.max(
+    Math.abs(scales.red),
+    Math.abs(scales.green),
+    Math.abs(scales.blue),
+  );
+  const padX = filterRegionPad(maxScale, width);
+  const padY = filterRegionPad(maxScale, height);
 
   return (
     <svg
       aria-hidden="true"
-      width="0"
-      height="0"
-      style={svgStyle}
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
       colorInterpolationFilters="sRGB"
+      style={svgStyle}
     >
       <defs>
         <filter
           id={id}
-          x="0"
-          y="0"
-          width={width}
-          height={height}
-          filterUnits="userSpaceOnUse"
+          x={-padX}
+          y={-padY}
+          width={1 + padX * 2}
+          height={1 + padY * 2}
+          filterUnits="objectBoundingBox"
           primitiveUnits="userSpaceOnUse"
           colorInterpolationFilters="sRGB"
         >
@@ -54,12 +64,8 @@ export function GlassFilterSvg({
 
           {chromatic ? (
             <>
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="map"
-                scale={finiteScale(scales.red)}
-                xChannelSelector="R"
-                yChannelSelector="G"
+              <Displacement
+                scale={scales.red}
                 result="dispR"
               />
               <feColorMatrix
@@ -68,12 +74,8 @@ export function GlassFilterSvg({
                 values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
                 result="r"
               />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="map"
-                scale={finiteScale(scales.green)}
-                xChannelSelector="R"
-                yChannelSelector="G"
+              <Displacement
+                scale={scales.green}
                 result="dispG"
               />
               <feColorMatrix
@@ -82,12 +84,8 @@ export function GlassFilterSvg({
                 values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"
                 result="g"
               />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="map"
-                scale={finiteScale(scales.blue)}
-                xChannelSelector="R"
-                yChannelSelector="G"
+              <Displacement
+                scale={scales.blue}
                 result="dispB"
               />
               <feColorMatrix
@@ -100,14 +98,7 @@ export function GlassFilterSvg({
               <feBlend in="rg" in2="b" mode="screen" result="refracted" />
             </>
           ) : (
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="map"
-              scale={finiteScale(scales.green)}
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="refracted"
-            />
+            <Displacement scale={scales.green} result="refracted" />
           )}
 
           {blur > 0.2 ? (
@@ -123,14 +114,29 @@ export function GlassFilterSvg({
   );
 }
 
+function Displacement({ scale, result }: { scale: number; result: string }) {
+  return (
+    <feDisplacementMap
+      in="SourceGraphic"
+      in2="map"
+      scale={finiteScale(scale)}
+      xChannelSelector="R"
+      yChannelSelector="G"
+      edgeMode="none"
+      result={result}
+    />
+  );
+}
+
 function finiteScale(value: number): number {
   return Number.isFinite(value) ? value : 0;
 }
 
 const svgStyle: CSSProperties = {
   position: "absolute",
-  width: 0,
-  height: 0,
-  overflow: "hidden",
+  inset: 0,
+  width: "100%",
+  height: "100%",
   pointerEvents: "none",
+  overflow: "visible",
 };
