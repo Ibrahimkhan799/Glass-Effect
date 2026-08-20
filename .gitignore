@@ -1,6 +1,8 @@
 node_modules
 dist
 dist-playground
+dist-site
+.vercel
 .DS_Store
 *.log
 .vite
